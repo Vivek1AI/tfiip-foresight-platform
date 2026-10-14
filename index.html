@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TF-IIP Foresight Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+            <div>
+                <h1 class="text-2xl font-bold text-emerald-400">TF-IIP Executive Dashboard</h1>
+                <p class="text-xs text-slate-400">Technology Foresight & Innovation Intelligence Platform</p>
+            </div>
+            <button id="exportBtn" class="hidden bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 font-semibold px-4 py-2 rounded text-xs transition-all flex items-center gap-2">
+                <span>📥</span> Export CSV Report
+            </button>
+        </div>
+
+        <!-- Controls Card -->
+        <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
+            <h2 class="text-sm uppercase tracking-wider text-slate-400 font-semibold">Select Target Scope</h2>
+            
+            <div>
+                <label class="block text-xs text-slate-300 mb-1">Level 1: Macro Industry</label>
+                <select id="macroSelect" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                    <option value="">-- Select Macro Industry --</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs text-slate-300 mb-1">Level 2: Sub-Sector</label>
+                <select id="subSelect" disabled class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500 disabled:opacity-50">
+                    <option value="">-- Select Sub-Sector --</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs text-slate-300 mb-1">Level 5 Custom Term (Optional)</label>
+                <input type="text" id="customTerm" placeholder="e.g. Solid Amine Contactor" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <button id="runBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded transition-all">
+                Run Foresight Analytics
+            </button>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsCard" class="hidden space-y-6">
+            
+            <!-- Calculated Metrics -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
+                <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Calculated Technology Metrics</h2>
+                
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div class="bg-slate-950 p-4 rounded border border-slate-800">
+                        <p class="text-xs text-slate-400 mb-1">10-Year CAGR</p>
+                        <p id="cagrVal" class="text-xl font-bold text-emerald-400">0%</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded border border-slate-800">
+                        <p class="text-xs text-slate-400 mb-1">3-Yr Momentum Velocity</p>
+                        <p id="momentumVal" class="text-xl font-bold text-amber-400">0x</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded border border-slate-800">
+                        <p class="text-xs text-slate-400 mb-1">Maturity Stage</p>
+                        <p id="stageVal" class="text-xl font-bold text-blue-400">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2x2 Matrix Chart -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Technology Maturity Matrix (2x2)</h2>
+                    <span class="text-xs text-slate-400">X: Citation Compression | Y: Momentum</span>
+                </div>
+
+                <div class="relative w-full h-72 bg-slate-950 rounded-lg border border-slate-800 overflow-hidden">
+                    <div class="absolute inset-0 border-b border-slate-800 top-1/2 -translate-y-1/2 pointer-events-none"></div>
+                    <div class="absolute inset-0 border-r border-slate-800 left-1/2 -translate-x-1/2 pointer-events-none"></div>
+
+                    <span class="absolute top-2 left-3 text-xs font-bold text-amber-500/40 uppercase">Early Stage Research</span>
+                    <span class="absolute top-2 right-3 text-xs font-bold text-emerald-500/40 uppercase">Emerging Commercial</span>
+                    <span class="absolute bottom-2 left-3 text-xs font-bold text-rose-500/40 uppercase">Stagnant / Substitution</span>
+                    <span class="absolute bottom-2 right-3 text-xs font-bold text-blue-500/40 uppercase">Mature Industrial</span>
+
+                    <div id="techPoint" class="absolute w-5 h-5 bg-emerald-500 rounded-full border-2 border-slate-900 shadow-lg transform -translate-x-1/2 translate-y-1/2 transition-all duration-500 hidden"></div>
+                </div>
+            </div>
+
+            <!-- NLP Emerging Buzzwords Section (SRS 6.2) -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
+                <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">NLP Lexicon & Emerging Tech Buzzwords</h2>
+                <div id="buzzwordsContainer" class="flex flex-wrap gap-2 pt-2"></div>
+            </div>
+
+            <!-- Top Leaderboards Grid -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
+                <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Sub-Sector Intelligence Leaderboards</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+                        <h3 class="text-xs font-bold uppercase text-slate-400 mb-3 border-b border-slate-800 pb-2">Top Corporate Patent Holders</h3>
+                        <div id="corporateList" class="space-y-2 text-xs"></div>
+                    </div>
+
+                    <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+                        <h3 class="text-xs font-bold uppercase text-slate-400 mb-3 border-b border-slate-800 pb-2">Top Academic & Research Institutions</h3>
+                        <div id="academicList" class="space-y-2 text-xs"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const API_BASE = "http://127.0.0.1:8000/api/v1";
+        let currentAnalyticsData = null;
+
+        fetch(`${API_BASE}/macro-industries`)
+            .then(res => res.json())
+            .then(data => {
+                const select = document.getElementById('macroSelect');
+                data.macro_industries.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item;
+                    opt.textContent = item;
+                    select.appendChild(opt);
+                });
+            });
+
+        document.getElementById('macroSelect').addEventListener('change', (e) => {
+            const macro = e.target.value;
+            const subSelect = document.getElementById('subSelect');
+            subSelect.innerHTML = '<option value="">-- Select Sub-Sector --</option>';
+            
+            if (!macro) {
+                subSelect.disabled = true;
+                return;
+            }
+
+            fetch(`${API_BASE}/sub-sectors?macro_industry=${encodeURIComponent(macro)}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.sub_sectors.forEach(item => {
+                        const opt = document.createElement('option');
+                        opt.value = item;
+                        opt.textContent = item;
+                        subSelect.appendChild(opt);
+                    });
+                    subSelect.disabled = false;
+                });
+        });
+
+        document.getElementById('runBtn').addEventListener('click', () => {
+            const subSector = document.getElementById('subSelect').value;
+            const customTerm = document.getElementById('customTerm').value;
+
+            if (!subSector) {
+                alert("Please select a Sub-Sector first!");
+                return;
+            }
+
+            let url = `${API_BASE}/calculate?sub_sector=${encodeURIComponent(subSector)}`;
+            if (customTerm) url += `&custom_term=${encodeURIComponent(customTerm)}`;
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    currentAnalyticsData = data;
+                    const metrics = data.calculated_metrics;
+                    document.getElementById('cagrVal').textContent = `${metrics['10_year_cagr_percentage']}%`;
+                    document.getElementById('momentumVal').textContent = `${metrics['3_year_momentum_velocity']}x`;
+                    document.getElementById('stageVal').textContent = metrics['technology_stage'];
+                    
+                    const point = document.getElementById('techPoint');
+                    point.style.left = `${metrics['matrix_x_position']}%`;
+                    point.style.bottom = `${metrics['matrix_y_position']}%`;
+                    point.classList.remove('hidden');
+
+                    // Render Emerging Buzzwords
+                    const buzzContainer = document.getElementById('buzzwordsContainer');
+                    buzzContainer.innerHTML = '';
+                    data.emerging_buzzwords.forEach(word => {
+                        buzzContainer.innerHTML += `
+                            <span class="bg-emerald-950/80 border border-emerald-700/50 text-emerald-300 text-xs px-3 py-1.5 rounded-full font-mono">
+                                🔥 ${word}
+                            </span>`;
+                    });
+
+                    // Render Corporate Leaderboard
+                    const corpContainer = document.getElementById('corporateList');
+                    corpContainer.innerHTML = '';
+                    data.leaderboards.top_corporate.forEach((item, idx) => {
+                        corpContainer.innerHTML += `
+                            <div class="flex justify-between items-center bg-slate-900 p-2 rounded">
+                                <span class="text-slate-300 font-medium">${idx + 1}. ${item.name}</span>
+                                <span class="text-emerald-400 font-mono font-bold">${item.patents} Patents</span>
+                            </div>`;
+                    });
+
+                    // Render Academic Leaderboard
+                    const acadContainer = document.getElementById('academicList');
+                    acadContainer.innerHTML = '';
+                    data.leaderboards.top_academia.forEach((item, idx) => {
+                        acadContainer.innerHTML += `
+                            <div class="flex justify-between items-center bg-slate-900 p-2 rounded">
+                                <span class="text-slate-300 font-medium">${idx + 1}. ${item.name}</span>
+                                <span class="text-amber-400 font-mono font-bold">${item.citations} Citations</span>
+                            </div>`;
+                    });
+
+                    document.getElementById('resultsCard').classList.remove('hidden');
+                    document.getElementById('exportBtn').classList.remove('hidden');
+                });
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            if (!currentAnalyticsData) return;
+
+            const m = currentAnalyticsData.calculated_metrics;
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Category,Parameter,Value\n";
+            csvContent += `Scope,Sub-Sector,"${currentAnalyticsData.selected_sub_sector}"\n`;
+            csvContent += `Scope,Custom Term,"${currentAnalyticsData.custom_term_injected || 'None'}"\n`;
+            csvContent += `Metrics,10-Year CAGR,${m['10_year_cagr_percentage']}%\n`;
+            csvContent += `Metrics,3-Year Momentum Velocity,${m['3_year_momentum_velocity']}x\n`;
+            csvContent += `Metrics,Technology Stage,${m['technology_stage']}\n\n`;
+
+            csvContent += "Corporate Leaderboard,Entity,Patents\n";
+            currentAnalyticsData.leaderboards.top_corporate.forEach(item => {
+                csvContent += `Corporate,"${item.name}",${item.patents}\n`;
+            });
+
+            csvContent += "\nAcademic Leaderboard,Institution,Citations\n";
+            currentAnalyticsData.leaderboards.top_academia.forEach(item => {
+                csvContent += `Academia,"${item.name}",${item.citations}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `TF_IIP_Report_${currentAnalyticsData.selected_sub_sector.replace(/[^a-zA-Z0-9]/g, '_')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    </script>
+</body>
+</html>
