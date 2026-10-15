@@ -21,31 +21,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize BigQuery Client (Dual Support: Local File OR Render Environment Variable)
+# Initialize BigQuery Client Safely
 bq_client = None
 
-# 1. Try loading from local gcp-key.json file first (Local Development)
+# 1. Local JSON file check (Local Development)
 if os.path.exists("gcp-key.json"):
     try:
         credentials = service_account.Credentials.from_service_account_file("gcp-key.json")
         bq_client = bigquery.Client(credentials=credentials, project=credentials.project_id)
-        print("✓ BigQuery Client initialized from local 'gcp-key.json' file!")
+        print("✓ BigQuery initialized from local 'gcp-key.json' file!")
     except Exception as e:
-        print(f"❌ Error loading local JSON file: {e}")
+        print(f"⚠️ Error loading local JSON file: {e}")
 
-# 2. Fallback to GCP_SERVICE_KEY Environment Variable (Render Production)
+# 2. Render Environment Variable check (Production)
 elif os.getenv("GCP_SERVICE_KEY"):
     try:
         key_dict = json.loads(os.getenv("GCP_SERVICE_KEY"))
         credentials = service_account.Credentials.from_service_account_info(key_dict)
         bq_client = bigquery.Client(credentials=credentials, project=credentials.project_id)
-        print("✓ BigQuery Client initialized from GCP_SERVICE_KEY environment variable!")
+        print("✓ BigQuery initialized from GCP_SERVICE_KEY environment variable!")
     except Exception as e:
-        print(f"❌ Error loading GCP_SERVICE_KEY env variable: {e}")
+        print(f"⚠️ Error parsing GCP_SERVICE_KEY env: {e}. Falling back to simulation mode.")
 
 else:
-    print("⚠️ Warning: No GCP credentials found. System will run with simulation fallback data.")
-
+    print("⚠️ No GCP credentials found. Server running in simulation fallback mode.")
+    
 app = FastAPI(title="TF-IIP Technology Foresight API")
 
 # Enable CORS for browser requests
