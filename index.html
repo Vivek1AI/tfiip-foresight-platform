@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen p-8">
-    <div class="max-w-4xl mx-auto space-y-6">
+    <div class="max-w-6xl mx-auto space-y-6">
         
         <!-- Header -->
         <div class="flex justify-between items-center border-b border-slate-800 pb-4">
@@ -20,30 +20,46 @@
             </button>
         </div>
 
-        <!-- Controls Card -->
+        <!-- Controls Card: Full Level 1 - 5 Cascading Selection -->
         <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
-            <h2 class="text-sm uppercase tracking-wider text-slate-400 font-semibold">Select Target Scope</h2>
+            <h2 class="text-sm uppercase tracking-wider text-slate-400 font-semibold">Select Target Scope (Levels 1 – 5)</h2>
             
-            <div>
-                <label class="block text-xs text-slate-300 mb-1">Level 1: Macro Industry</label>
-                <select id="macroSelect" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500">
-                    <option value="">-- Select Macro Industry --</option>
-                </select>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs text-slate-300 mb-1">Level 1: Macro Industry</label>
+                    <select id="macroSelect" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                        <option value="">-- Select Macro Industry --</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-300 mb-1">Level 2: Sub-Sector</label>
+                    <select id="subSelect" disabled class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500 disabled:opacity-50">
+                        <option value="">-- Select Sub-Sector --</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-300 mb-1">Level 3: Strategic Theme (Optional)</label>
+                    <select id="themeSelect" disabled class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500 disabled:opacity-50">
+                        <option value="">-- Select Strategic Theme --</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-300 mb-1">Level 4: Focus Area (Optional)</label>
+                    <select id="focusSelect" disabled class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500 disabled:opacity-50">
+                        <option value="">-- Select Focus Area --</option>
+                    </select>
+                </div>
             </div>
 
             <div>
-                <label class="block text-xs text-slate-300 mb-1">Level 2: Sub-Sector</label>
-                <select id="subSelect" disabled class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500 disabled:opacity-50">
-                    <option value="">-- Select Sub-Sector --</option>
-                </select>
+                <label class="block text-xs text-slate-300 mb-1">Level 5: Custom Term / Keyword Injection (Optional)</label>
+                <input type="text" id="customTerm" placeholder="e.g. Solid Amine Contactor, Metal-Organic Framework" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500">
             </div>
 
-            <div>
-                <label class="block text-xs text-slate-300 mb-1">Level 5 Custom Term (Optional)</label>
-                <input type="text" id="customTerm" placeholder="e.g. Solid Amine Contactor" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500">
-            </div>
-
-            <button id="runBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded transition-all">
+            <button id="runBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded transition-all shadow-md">
                 Run Foresight Analytics
             </button>
         </div>
@@ -71,44 +87,61 @@
                 </div>
             </div>
 
-            <!-- 2x2 Matrix Chart -->
+            <!-- 2x2 Matrix Chart (Rendering 40+ Technologies) -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Technology Maturity Matrix (2x2)</h2>
-                    <span class="text-xs text-slate-400">X: Citation Compression | Y: Momentum</span>
+                    <div>
+                        <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Technology Maturity Matrix (40+ Technologies Mapped)</h2>
+                        <p class="text-xs text-slate-400">X: Citation Lag Compression | Y: 3-Yr Momentum Velocity</p>
+                    </div>
+                    <span id="matrixCountTag" class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-1 rounded font-mono">40 Techs Mapped</span>
                 </div>
 
-                <div class="relative w-full h-72 bg-slate-950 rounded-lg border border-slate-800 overflow-hidden">
+                <div id="matrixContainer" class="relative w-full h-96 bg-slate-950 rounded-lg border border-slate-800 overflow-hidden">
+                    <!-- Quadrant Divider Lines -->
                     <div class="absolute inset-0 border-b border-slate-800 top-1/2 -translate-y-1/2 pointer-events-none"></div>
                     <div class="absolute inset-0 border-r border-slate-800 left-1/2 -translate-x-1/2 pointer-events-none"></div>
 
-                    <span class="absolute top-2 left-3 text-xs font-bold text-amber-500/40 uppercase">Early Stage Research</span>
-                    <span class="absolute top-2 right-3 text-xs font-bold text-emerald-500/40 uppercase">Emerging Commercial</span>
-                    <span class="absolute bottom-2 left-3 text-xs font-bold text-rose-500/40 uppercase">Stagnant / Substitution</span>
-                    <span class="absolute bottom-2 right-3 text-xs font-bold text-blue-500/40 uppercase">Mature Industrial</span>
+                    <!-- Quadrant Labels -->
+                    <span class="absolute top-2 left-3 text-xs font-bold text-amber-500/40 uppercase pointer-events-none">Early Stage Research</span>
+                    <span class="absolute top-2 right-3 text-xs font-bold text-emerald-500/40 uppercase pointer-events-none">Emerging Commercial</span>
+                    <span class="absolute bottom-2 left-3 text-xs font-bold text-rose-500/40 uppercase pointer-events-none">Stagnant / Substitution</span>
+                    <span class="absolute bottom-2 right-3 text-xs font-bold text-blue-500/40 uppercase pointer-events-none">Mature Industrial</span>
 
-                    <div id="techPoint" class="absolute w-5 h-5 bg-emerald-500 rounded-full border-2 border-slate-900 shadow-lg transform -translate-x-1/2 translate-y-1/2 transition-all duration-500 hidden"></div>
+                    <!-- Dynamic Scatter Points populated by JS -->
+                    <div id="matrixPointsLayer"></div>
                 </div>
             </div>
 
-            <!-- NLP Emerging Buzzwords Section (SRS 6.2) -->
+            <!-- Geographic Distribution Heatmap / Progress Bar -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
-                <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">NLP Lexicon & Emerging Tech Buzzwords</h2>
+                <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Geographic Distribution of Patent Filings</h2>
+                <div id="geoDistributionContainer" class="space-y-3"></div>
+            </div>
+
+            <!-- NLP Lexicon & Emerging Tech Buzzwords (20 Terms) -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">NLP Lexicon & Emerging Tech Buzzwords</h2>
+                    <span id="buzzwordCountTag" class="text-xs text-slate-400 font-mono">20 Terms Extracted</span>
+                </div>
                 <div id="buzzwordsContainer" class="flex flex-wrap gap-2 pt-2"></div>
             </div>
 
-            <!-- Top Leaderboards Grid -->
+            <!-- Top 10 Leaderboards Grid -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
-                <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Sub-Sector Intelligence Leaderboards</h2>
+                <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Sub-Sector Intelligence Leaderboards (Top 10)</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Top 10 Corporate Entities -->
                     <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
-                        <h3 class="text-xs font-bold uppercase text-slate-400 mb-3 border-b border-slate-800 pb-2">Top Corporate Patent Holders</h3>
+                        <h3 class="text-xs font-bold uppercase text-slate-400 mb-3 border-b border-slate-800 pb-2">Top 10 Corporate Patent Holders</h3>
                         <div id="corporateList" class="space-y-2 text-xs"></div>
                     </div>
 
+                    <!-- Top 10 Academic Institutions -->
                     <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
-                        <h3 class="text-xs font-bold uppercase text-slate-400 mb-3 border-b border-slate-800 pb-2">Top Academic & Research Institutions</h3>
+                        <h3 class="text-xs font-bold uppercase text-slate-400 mb-3 border-b border-slate-800 pb-2">Top 10 Academic & Research Institutions</h3>
                         <div id="academicList" class="space-y-2 text-xs"></div>
                     </div>
                 </div>
@@ -122,6 +155,7 @@
         const API_BASE = "http://127.0.0.1:8000/api/v1";
         let currentAnalyticsData = null;
 
+        // Load Level 1 Macro Industries
         fetch(`${API_BASE}/macro-industries`)
             .then(res => res.json())
             .then(data => {
@@ -134,11 +168,20 @@
                 });
             });
 
+        // Cascading Level 1 -> Level 2
         document.getElementById('macroSelect').addEventListener('change', (e) => {
             const macro = e.target.value;
             const subSelect = document.getElementById('subSelect');
+            const themeSelect = document.getElementById('themeSelect');
+            const focusSelect = document.getElementById('focusSelect');
+
             subSelect.innerHTML = '<option value="">-- Select Sub-Sector --</option>';
+            themeSelect.innerHTML = '<option value="">-- Select Strategic Theme --</option>';
+            focusSelect.innerHTML = '<option value="">-- Select Focus Area --</option>';
             
+            themeSelect.disabled = true;
+            focusSelect.disabled = true;
+
             if (!macro) {
                 subSelect.disabled = true;
                 return;
@@ -157,16 +200,77 @@
                 });
         });
 
+        // Cascading Level 2 -> Level 3
+        document.getElementById('subSelect').addEventListener('change', (e) => {
+            const macro = document.getElementById('macroSelect').value;
+            const sub = e.target.value;
+            const themeSelect = document.getElementById('themeSelect');
+            const focusSelect = document.getElementById('focusSelect');
+
+            themeSelect.innerHTML = '<option value="">-- Select Strategic Theme --</option>';
+            focusSelect.innerHTML = '<option value="">-- Select Focus Area --</option>';
+            focusSelect.disabled = true;
+
+            if (!sub) {
+                themeSelect.disabled = true;
+                return;
+            }
+
+            fetch(`${API_BASE}/themes?macro_industry=${encodeURIComponent(macro)}&sub_sector=${encodeURIComponent(sub)}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.themes.forEach(item => {
+                        const opt = document.createElement('option');
+                        opt.value = item;
+                        opt.textContent = item;
+                        themeSelect.appendChild(opt);
+                    });
+                    themeSelect.disabled = false;
+                });
+        });
+
+        // Cascading Level 3 -> Level 4
+        document.getElementById('themeSelect').addEventListener('change', (e) => {
+            const macro = document.getElementById('macroSelect').value;
+            const sub = document.getElementById('subSelect').value;
+            const theme = e.target.value;
+            const focusSelect = document.getElementById('focusSelect');
+
+            focusSelect.innerHTML = '<option value="">-- Select Focus Area --</option>';
+
+            if (!theme) {
+                focusSelect.disabled = true;
+                return;
+            }
+
+            fetch(`${API_BASE}/focus-areas?macro_industry=${encodeURIComponent(macro)}&sub_sector=${encodeURIComponent(sub)}&theme=${encodeURIComponent(theme)}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.focus_areas.forEach(item => {
+                        const opt = document.createElement('option');
+                        opt.value = item;
+                        opt.textContent = item;
+                        focusSelect.appendChild(opt);
+                    });
+                    focusSelect.disabled = false;
+                });
+        });
+
+        // Execute Analytics
         document.getElementById('runBtn').addEventListener('click', () => {
             const subSector = document.getElementById('subSelect').value;
+            const theme = document.getElementById('themeSelect').value;
+            const focusArea = document.getElementById('focusSelect').value;
             const customTerm = document.getElementById('customTerm').value;
 
             if (!subSector) {
-                alert("Please select a Sub-Sector first!");
+                alert("Please select at least a Macro Industry and Sub-Sector!");
                 return;
             }
 
             let url = `${API_BASE}/calculate?sub_sector=${encodeURIComponent(subSector)}`;
+            if (theme) url += `&theme=${encodeURIComponent(theme)}`;
+            if (focusArea) url += `&focus_area=${encodeURIComponent(focusArea)}`;
             if (customTerm) url += `&custom_term=${encodeURIComponent(customTerm)}`;
 
             fetch(url)
@@ -174,44 +278,83 @@
                 .then(data => {
                     currentAnalyticsData = data;
                     const metrics = data.calculated_metrics;
+                    
                     document.getElementById('cagrVal').textContent = `${metrics['10_year_cagr_percentage']}%`;
                     document.getElementById('momentumVal').textContent = `${metrics['3_year_momentum_velocity']}x`;
                     document.getElementById('stageVal').textContent = metrics['technology_stage'];
-                    
-                    const point = document.getElementById('techPoint');
-                    point.style.left = `${metrics['matrix_x_position']}%`;
-                    point.style.bottom = `${metrics['matrix_y_position']}%`;
-                    point.classList.remove('hidden');
 
-                    // Render Emerging Buzzwords
+                    // Render 40+ Technology Points on Matrix
+                    const layer = document.getElementById('matrixPointsLayer');
+                    layer.innerHTML = '';
+                    data.matrix_technologies.forEach(tech => {
+                        const pt = document.createElement('div');
+                        pt.className = 'absolute w-3 h-3 rounded-full border border-slate-900 group cursor-pointer transform -translate-x-1/2 translate-y-1/2 hover:scale-150 transition-all z-10';
+                        pt.style.left = `${tech.x}%`;
+                        pt.style.bottom = `${tech.y}%`;
+
+                        // Color coding by stage
+                        if (tech.stage === 'Emerging') pt.classList.add('bg-emerald-400');
+                        else if (tech.stage === 'Early Stage') pt.classList.add('bg-amber-400');
+                        else if (tech.stage === 'Mature') pt.classList.add('bg-blue-400');
+                        else pt.classList.add('bg-rose-400');
+
+                        // Tooltip
+                        pt.innerHTML = `
+                            <div class="hidden group-hover:block absolute bottom-5 left-1/2 -translate-x-1/2 bg-slate-800 text-[10px] text-slate-100 p-2 rounded shadow-xl whitespace-nowrap z-30 border border-slate-700">
+                                <p class="font-bold text-emerald-400">${tech.name}</p>
+                                <p>Stage: ${tech.stage}</p>
+                                <p>Momentum: ${tech.y_val}x | Lag: ${tech.x_val}m</p>
+                            </div>
+                        `;
+                        layer.appendChild(pt);
+                    });
+
+                    // Render Geographic Distribution
+                    const geoContainer = document.getElementById('geoDistributionContainer');
+                    geoContainer.innerHTML = '';
+                    data.geographic_distribution.forEach(geo => {
+                        geoContainer.innerHTML += `
+                            <div class="space-y-1">
+                                <div class="flex justify-between text-xs">
+                                    <span class="text-slate-300 font-medium">${geo.country}</span>
+                                    <span class="text-emerald-400 font-mono font-bold">${geo.patents.toLocaleString()} Patents (${geo.percentage}%)</span>
+                                </div>
+                                <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+                                    <div class="bg-emerald-500 h-full rounded-full" style="width: ${geo.percentage}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    // Render 20 Emerging Buzzwords
                     const buzzContainer = document.getElementById('buzzwordsContainer');
                     buzzContainer.innerHTML = '';
                     data.emerging_buzzwords.forEach(word => {
                         buzzContainer.innerHTML += `
-                            <span class="bg-emerald-950/80 border border-emerald-700/50 text-emerald-300 text-xs px-3 py-1.5 rounded-full font-mono">
+                            <span class="bg-emerald-950/80 border border-emerald-700/50 text-emerald-300 text-xs px-2.5 py-1 rounded-full font-mono">
                                 🔥 ${word}
                             </span>`;
                     });
 
-                    // Render Corporate Leaderboard
+                    // Render Top 10 Corporate Leaderboard
                     const corpContainer = document.getElementById('corporateList');
                     corpContainer.innerHTML = '';
                     data.leaderboards.top_corporate.forEach((item, idx) => {
                         corpContainer.innerHTML += `
                             <div class="flex justify-between items-center bg-slate-900 p-2 rounded">
                                 <span class="text-slate-300 font-medium">${idx + 1}. ${item.name}</span>
-                                <span class="text-emerald-400 font-mono font-bold">${item.patents} Patents</span>
+                                <span class="text-emerald-400 font-mono font-bold">${item.patents.toLocaleString()} Patents</span>
                             </div>`;
                     });
 
-                    // Render Academic Leaderboard
+                    // Render Top 10 Academic Leaderboard
                     const acadContainer = document.getElementById('academicList');
                     acadContainer.innerHTML = '';
                     data.leaderboards.top_academia.forEach((item, idx) => {
                         acadContainer.innerHTML += `
                             <div class="flex justify-between items-center bg-slate-900 p-2 rounded">
                                 <span class="text-slate-300 font-medium">${idx + 1}. ${item.name}</span>
-                                <span class="text-amber-400 font-mono font-bold">${item.citations} Citations</span>
+                                <span class="text-amber-400 font-mono font-bold">${item.citations.toLocaleString()} Citations</span>
                             </div>`;
                     });
 
@@ -220,6 +363,7 @@
                 });
         });
 
+        // Export CSV
         document.getElementById('exportBtn').addEventListener('click', () => {
             if (!currentAnalyticsData) return;
 
@@ -227,17 +371,16 @@
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += "Category,Parameter,Value\n";
             csvContent += `Scope,Sub-Sector,"${currentAnalyticsData.selected_sub_sector}"\n`;
-            csvContent += `Scope,Custom Term,"${currentAnalyticsData.custom_term_injected || 'None'}"\n`;
             csvContent += `Metrics,10-Year CAGR,${m['10_year_cagr_percentage']}%\n`;
             csvContent += `Metrics,3-Year Momentum Velocity,${m['3_year_momentum_velocity']}x\n`;
             csvContent += `Metrics,Technology Stage,${m['technology_stage']}\n\n`;
 
-            csvContent += "Corporate Leaderboard,Entity,Patents\n";
+            csvContent += "Corporate Leaderboard (Top 10),Entity,Patents\n";
             currentAnalyticsData.leaderboards.top_corporate.forEach(item => {
                 csvContent += `Corporate,"${item.name}",${item.patents}\n`;
             });
 
-            csvContent += "\nAcademic Leaderboard,Institution,Citations\n";
+            csvContent += "\nAcademic Leaderboard (Top 10),Institution,Citations\n";
             currentAnalyticsData.leaderboards.top_academia.forEach(item => {
                 csvContent += `Academia,"${item.name}",${item.citations}\n`;
             });
