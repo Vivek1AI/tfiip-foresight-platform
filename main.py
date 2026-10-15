@@ -1,8 +1,50 @@
+import os
+import json
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
-import os
+from google.cloud import bigquery
+from google.oauth2 import service_account
+
+# Load variables from .env file if present
+load_dotenv()
+
+app = FastAPI(title="TF-IIP Technology Foresight API")
+
+# Enable CORS for browser requests
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Initialize BigQuery Client (Dual Support: Local File OR Render Environment Variable)
+bq_client = None
+
+# 1. Try loading from local gcp-key.json file first (Local Development)
+if os.path.exists("gcp-key.json"):
+    try:
+        credentials = service_account.Credentials.from_service_account_file("gcp-key.json")
+        bq_client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+        print("✓ BigQuery Client initialized from local 'gcp-key.json' file!")
+    except Exception as e:
+        print(f"❌ Error loading local JSON file: {e}")
+
+# 2. Fallback to GCP_SERVICE_KEY Environment Variable (Render Production)
+elif os.getenv("GCP_SERVICE_KEY"):
+    try:
+        key_dict = json.loads(os.getenv("GCP_SERVICE_KEY"))
+        credentials = service_account.Credentials.from_service_account_info(key_dict)
+        bq_client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+        print("✓ BigQuery Client initialized from GCP_SERVICE_KEY environment variable!")
+    except Exception as e:
+        print(f"❌ Error loading GCP_SERVICE_KEY env variable: {e}")
+
+else:
+    print("⚠️ Warning: No GCP credentials found. System will run with simulation fallback data.")
 
 app = FastAPI(title="TF-IIP Technology Foresight API")
 
@@ -179,61 +221,70 @@ def get_sub_sectors(macro_industry: str = Query(...)):
 # API Endpoint: Calculate CAGR, Momentum Velocity & Leaderboards
 @app.get("/api/v1/calculate")
 def run_analytics(sub_sector: str, custom_term: Optional[str] = None):
+  # 1. Build optimized BigQuery SQL
+  sql_query = build_bigquery_sql(sub_sector, custom_term)
+
+  patent_history = []
+
+  # 2. Execute live BigQuery query if client is active
+  if bq_client:
+    try:
+      print(f"🔍 Querying Google Patents BigQuery for: {sub_sector}...")
+      query_job = bq_client.query(sql_query)
+      results = [dict(row) for row in query_job.result()]
+      print(f"✅ Success! Fetched {len(results)} annual patent records.")
+
+      # Extract annual time series from live results
+      patent_history = [row.get("patent_family_count", 0) for row in results]
+    except Exception as e:
+      print(f"❌ BigQuery Execution Error: {e}")
+
+  # Fallback to simulation array if query yields empty data or errors
+  if not patent_history or len(patent_history) < 10:
+    print("⚠️ Using fallback time-series baseline.")
     patent_history = [12, 15, 18, 22, 30, 45, 60, 95, 140, 210]
-    
-    start_vol = patent_history[0]
-    end_vol = patent_history[-1]
-    cagr = ((end_vol / start_vol) ** (1 / 10)) - 1.0
-    
-    trailing_3_yr = sum(patent_history[-3:])
-    historical_avg = sum(patent_history[:-3]) / len(patent_history[:-3])
-    momentum = trailing_3_yr / (3 * historical_avg)
-    
-    x_pos = 75 if "Carbon" in sub_sector else 40
-    y_pos = min(int(momentum * 20), 90)
 
-    # Dynamic NLP Lexicon Extraction based on selected Sub-Sector (SRS Section 6.2)
-    buzzwords = [
-        "Metal-Organic Frameworks (MOFs)", "Solid Amine Contactor", "Direct Air Capture",
-        "Electro-swing Adsorption", "Structured Monoliths", "Potassium Carbonate",
-        "Bio-char Pyrolysis", "Cryogenic Separation"
-    ] if "Carbon" in sub_sector or "Green" in sub_sector else [
-        "Proton Exchange Membrane (PEM)", "Iridium Catalyst Reduction", "Porous Transport Layer",
-        "Solid Oxide Electrolyzer (SOEC)", "Green Ammonia Synthesis", "Alkaline Water Electrolysis"
-    ]
+  # 3. Calculate 10-Year CAGR & 3-Year Momentum
+  start_vol = patent_history[0]
+  end_vol = patent_history[-1]
+  cagr = ((end_vol / start_vol) ** (1 / 10)) - 1.0
 
-    corporate_data = [
-        {"name": "Climeworks AG", "patents": 412},
-        {"name": "Carbon Engineering", "patents": 328},
-        {"name": "Saudi Aramco Tech Co.", "patents": 295},
-        {"name": "Linde plc", "patents": 184}
-    ] if "Carbon" in sub_sector else [
-        {"name": "ITM Power", "patents": 310},
-        {"name": "Plug Power Inc.", "patents": 275},
-        {"name": "Siemens Energy", "patents": 240},
-        {"name": "Thyssenkrupp Nucera", "patents": 190}
-    ]
+  trailing_3_yr = sum(patent_history[-3:])
+  historical_avg = (
+      sum(patent_history[:-3]) / len(patent_history[:-3])
+      if len(patent_history) > 3
+      else 1.0
+  )
+  momentum = (
+      trailing_3_yr / (3 * historical_avg) if historical_avg > 0 else 1.0
+  )
 
-    academic_data = [
-        {"name": "UC Berkeley", "citations": 1420},
-        {"name": "ETH Zürich", "citations": 1180},
-        {"name": "KAUST", "citations": 950},
-        {"name": "MIT", "citations": 870}
-    ]
+  x_pos = 75 if "Carbon" in sub_sector else 40
+  y_pos = min(int(momentum * 20), 90)
 
-    return {
-        "selected_sub_sector": sub_sector,
-        "custom_term_injected": custom_term,
-        "calculated_metrics": {
-            "10_year_cagr_percentage": round(cagr * 100, 2),
-            "3_year_momentum_velocity": round(momentum, 2),
-            "technology_stage": "Emerging" if momentum > 2.0 else "Early Stage",
-            "matrix_x_position": x_pos,
-            "matrix_y_position": y_pos
-        },
-        "emerging_buzzwords": buzzwords,
-        "leaderboards": {
-            "top_corporate": corporate_data,
-            "top_academia": academic_data
-        }
-    }
+  return {
+      "selected_sub_sector": sub_sector,
+      "custom_term_injected": custom_term,
+      "calculated_metrics": {
+          "10_year_cagr_percentage": round(cagr * 100, 2),
+          "3_year_momentum_velocity": round(momentum, 2),
+          "technology_stage": "Emerging" if momentum > 2.0 else "Early Stage",
+          "matrix_x_position": x_pos,
+          "matrix_y_position": y_pos,
+      },
+      "emerging_buzzwords": [
+          "Metal-Organic Frameworks",
+          "Direct Air Capture",
+          "Solid Amine Contactor",
+      ],
+      "leaderboards": {
+          "top_corporate": [
+              {"name": "Climeworks AG", "patents": 412},
+              {"name": "Carbon Engineering", "patents": 328},
+          ],
+          "top_academia": [
+              {"name": "UC Berkeley", "citations": 1420},
+              {"name": "ETH Zürich", "citations": 1180},
+          ],
+      },
+  }

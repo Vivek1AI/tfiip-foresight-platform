@@ -9,3 +9,6 @@ __pycache__/
 # Local Service Account Keys
 *.json
 !package.json
+
+gcp-key.json
+.env
