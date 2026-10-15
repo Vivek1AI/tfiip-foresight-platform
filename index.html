@@ -20,11 +20,12 @@
             </button>
         </div>
 
-        <!-- Controls Card: Full Level 1 - 5 Cascading Selection -->
+        <!-- Target Scope Controls (Levels 1 – 5) -->
         <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
             <h2 class="text-sm uppercase tracking-wider text-slate-400 font-semibold">Select Target Scope (Levels 1 – 5)</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Level 1 -->
                 <div>
                     <label class="block text-xs text-slate-300 mb-1">Level 1: Macro Industry</label>
                     <select id="macroSelect" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500">
@@ -32,6 +33,7 @@
                     </select>
                 </div>
 
+                <!-- Level 2 -->
                 <div>
                     <label class="block text-xs text-slate-300 mb-1">Level 2: Sub-Sector</label>
                     <select id="subSelect" disabled class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500 disabled:opacity-50">
@@ -39,6 +41,7 @@
                     </select>
                 </div>
 
+                <!-- Level 3 -->
                 <div>
                     <label class="block text-xs text-slate-300 mb-1">Level 3: Strategic Theme (Optional)</label>
                     <select id="themeSelect" disabled class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500 disabled:opacity-50">
@@ -46,6 +49,7 @@
                     </select>
                 </div>
 
+                <!-- Level 4 -->
                 <div>
                     <label class="block text-xs text-slate-300 mb-1">Level 4: Focus Area (Optional)</label>
                     <select id="focusSelect" disabled class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500 disabled:opacity-50">
@@ -54,6 +58,7 @@
                 </div>
             </div>
 
+            <!-- Level 5 Custom Injected Term -->
             <div>
                 <label class="block text-xs text-slate-300 mb-1">Level 5: Custom Term / Keyword Injection (Optional)</label>
                 <input type="text" id="customTerm" placeholder="e.g. Solid Amine Contactor, Metal-Organic Framework" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500">
@@ -64,10 +69,10 @@
             </button>
         </div>
 
-        <!-- Results Section -->
+        <!-- Output Analytics Results -->
         <div id="resultsCard" class="hidden space-y-6">
             
-            <!-- Calculated Metrics -->
+            <!-- Overall Metrics Summary -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Calculated Technology Metrics</h2>
                 
@@ -87,42 +92,39 @@
                 </div>
             </div>
 
-            <!-- 2x2 Matrix Chart (Rendering 40+ Technologies) -->
+            <!-- 2x2 Technology Maturity Matrix -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <div class="flex justify-between items-center">
                     <div>
-                        <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Technology Maturity Matrix (40+ Technologies Mapped)</h2>
-                        <p class="text-xs text-slate-400">X: Citation Lag Compression | Y: 3-Yr Momentum Velocity</p>
+                        <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Technology Maturity Matrix (40 Mapped Technologies)</h2>
+                        <p class="text-xs text-slate-400">X: Citation Compression | Y: 3-Yr Momentum Velocity</p>
                     </div>
                     <span id="matrixCountTag" class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-1 rounded font-mono">40 Techs Mapped</span>
                 </div>
 
                 <div id="matrixContainer" class="relative w-full h-96 bg-slate-950 rounded-lg border border-slate-800 overflow-hidden">
-                    <!-- Quadrant Divider Lines -->
                     <div class="absolute inset-0 border-b border-slate-800 top-1/2 -translate-y-1/2 pointer-events-none"></div>
                     <div class="absolute inset-0 border-r border-slate-800 left-1/2 -translate-x-1/2 pointer-events-none"></div>
 
-                    <!-- Quadrant Labels -->
                     <span class="absolute top-2 left-3 text-xs font-bold text-amber-500/40 uppercase pointer-events-none">Early Stage Research</span>
                     <span class="absolute top-2 right-3 text-xs font-bold text-emerald-500/40 uppercase pointer-events-none">Emerging Commercial</span>
                     <span class="absolute bottom-2 left-3 text-xs font-bold text-rose-500/40 uppercase pointer-events-none">Stagnant / Substitution</span>
                     <span class="absolute bottom-2 right-3 text-xs font-bold text-blue-500/40 uppercase pointer-events-none">Mature Industrial</span>
 
-                    <!-- Dynamic Scatter Points populated by JS -->
                     <div id="matrixPointsLayer"></div>
                 </div>
             </div>
 
-            <!-- Geographic Distribution Heatmap / Progress Bar -->
+            <!-- Geographic Patent Distribution -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Geographic Distribution of Patent Filings</h2>
                 <div id="geoDistributionContainer" class="space-y-3"></div>
             </div>
 
-            <!-- NLP Lexicon & Emerging Tech Buzzwords (20 Terms) -->
+            <!-- Domain-Specific NLP Lexicon & Buzzwords (20 Terms) -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">NLP Lexicon & Emerging Tech Buzzwords</h2>
+                    <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Domain NLP Lexicon & Emerging Tech Buzzwords</h2>
                     <span id="buzzwordCountTag" class="text-xs text-slate-400 font-mono">20 Terms Extracted</span>
                 </div>
                 <div id="buzzwordsContainer" class="flex flex-wrap gap-2 pt-2"></div>
@@ -133,13 +135,11 @@
                 <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Sub-Sector Intelligence Leaderboards (Top 10)</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Top 10 Corporate Entities -->
                     <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
                         <h3 class="text-xs font-bold uppercase text-slate-400 mb-3 border-b border-slate-800 pb-2">Top 10 Corporate Patent Holders</h3>
                         <div id="corporateList" class="space-y-2 text-xs"></div>
                     </div>
 
-                    <!-- Top 10 Academic Institutions -->
                     <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
                         <h3 class="text-xs font-bold uppercase text-slate-400 mb-3 border-b border-slate-800 pb-2">Top 10 Academic & Research Institutions</h3>
                         <div id="academicList" class="space-y-2 text-xs"></div>
@@ -155,7 +155,7 @@
         const API_BASE = "http://127.0.0.1:8000/api/v1";
         let currentAnalyticsData = null;
 
-        // Load Level 1 Macro Industries
+        // Fetch Level 1 Options
         fetch(`${API_BASE}/macro-industries`)
             .then(res => res.json())
             .then(data => {
@@ -168,7 +168,7 @@
                 });
             });
 
-        // Cascading Level 1 -> Level 2
+        // Level 1 -> Level 2
         document.getElementById('macroSelect').addEventListener('change', (e) => {
             const macro = e.target.value;
             const subSelect = document.getElementById('subSelect');
@@ -200,7 +200,7 @@
                 });
         });
 
-        // Cascading Level 2 -> Level 3
+        // Level 2 -> Level 3
         document.getElementById('subSelect').addEventListener('change', (e) => {
             const macro = document.getElementById('macroSelect').value;
             const sub = e.target.value;
@@ -229,7 +229,7 @@
                 });
         });
 
-        // Cascading Level 3 -> Level 4
+        // Level 3 -> Level 4
         document.getElementById('themeSelect').addEventListener('change', (e) => {
             const macro = document.getElementById('macroSelect').value;
             const sub = document.getElementById('subSelect').value;
@@ -256,7 +256,7 @@
                 });
         });
 
-        // Execute Analytics
+        // Run Foresight Analytics
         document.getElementById('runBtn').addEventListener('click', () => {
             const subSector = document.getElementById('subSelect').value;
             const theme = document.getElementById('themeSelect').value;
@@ -283,22 +283,26 @@
                     document.getElementById('momentumVal').textContent = `${metrics['3_year_momentum_velocity']}x`;
                     document.getElementById('stageVal').textContent = metrics['technology_stage'];
 
-                    // Render 40+ Technology Points on Matrix
+                    // Render 2x2 Matrix Scatter Points
                     const layer = document.getElementById('matrixPointsLayer');
                     layer.innerHTML = '';
                     data.matrix_technologies.forEach(tech => {
                         const pt = document.createElement('div');
-                        pt.className = 'absolute w-3 h-3 rounded-full border border-slate-900 group cursor-pointer transform -translate-x-1/2 translate-y-1/2 hover:scale-150 transition-all z-10';
+                        const isCustom = tech.name.includes("CUSTOM:");
+                        
+                        pt.className = `absolute rounded-full border border-slate-900 group cursor-pointer transform -translate-x-1/2 translate-y-1/2 hover:scale-150 transition-all z-10 ${
+                            isCustom ? 'w-4 h-4 bg-amber-400 ring-2 ring-amber-300 animate-pulse' : 'w-3 h-3'
+                        }`;
                         pt.style.left = `${tech.x}%`;
                         pt.style.bottom = `${tech.y}%`;
 
-                        // Color coding by stage
-                        if (tech.stage === 'Emerging') pt.classList.add('bg-emerald-400');
-                        else if (tech.stage === 'Early Stage') pt.classList.add('bg-amber-400');
-                        else if (tech.stage === 'Mature') pt.classList.add('bg-blue-400');
-                        else pt.classList.add('bg-rose-400');
+                        if (!isCustom) {
+                            if (tech.stage === 'Emerging') pt.classList.add('bg-emerald-400');
+                            else if (tech.stage === 'Early Stage') pt.classList.add('bg-amber-400');
+                            else if (tech.stage === 'Mature') pt.classList.add('bg-blue-400');
+                            else pt.classList.add('bg-rose-400');
+                        }
 
-                        // Tooltip
                         pt.innerHTML = `
                             <div class="hidden group-hover:block absolute bottom-5 left-1/2 -translate-x-1/2 bg-slate-800 text-[10px] text-slate-100 p-2 rounded shadow-xl whitespace-nowrap z-30 border border-slate-700">
                                 <p class="font-bold text-emerald-400">${tech.name}</p>
@@ -309,7 +313,7 @@
                         layer.appendChild(pt);
                     });
 
-                    // Render Geographic Distribution
+                    // Render Geographic Distribution Progress Bars
                     const geoContainer = document.getElementById('geoDistributionContainer');
                     geoContainer.innerHTML = '';
                     data.geographic_distribution.forEach(geo => {
@@ -363,7 +367,7 @@
                 });
         });
 
-        // Export CSV
+        // Export CSV Function
         document.getElementById('exportBtn').addEventListener('click', () => {
             if (!currentAnalyticsData) return;
 
