@@ -1,0 +1,11 @@
+# Sensitive Environment Variables (Security Keys)
+.env
+.env.local
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Local Service Account Keys
+*.json
+!package.json
