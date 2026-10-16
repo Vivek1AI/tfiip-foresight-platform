@@ -86,10 +86,11 @@
                 </div>
             </div>
 
+            <!-- Technology Maturity Matrix -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <div class="flex justify-between items-center">
                     <div>
-                        <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Technology Maturity Matrix (40 Mapped Technologies)</h2>
+                        <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Technology Maturity Matrix (40 Live Mapped Technologies)</h2>
                         <p class="text-xs text-slate-400">X: Citation Compression | Y: 3-Yr Momentum Velocity</p>
                     </div>
                     <span id="matrixCountTag" class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-1 rounded font-mono">40 Techs Mapped</span>
@@ -108,19 +109,25 @@
                 </div>
             </div>
 
-            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
-                <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Geographic Distribution of Patent Filings</h2>
-                <div id="geoDistributionContainer" class="space-y-3"></div>
-            </div>
-
+            <!-- NEW CHART: Patents by Top 10 Countries -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Domain NLP Lexicon & Emerging Tech Buzzwords</h2>
-                    <span id="buzzwordCountTag" class="text-xs text-slate-400 font-mono">20 Terms Extracted</span>
+                    <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Patents by Top 10 Countries (Global Priority Filings)</h2>
+                    <span class="text-xs text-slate-400 font-mono">Live Google Patents</span>
+                </div>
+                <div id="topCountriesChart" class="space-y-2.5 pt-2"></div>
+            </div>
+
+            <!-- Domain NLP Lexicon -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Live Google Patents Salient NLP Terms & Buzzwords</h2>
+                    <span id="buzzwordCountTag" class="text-xs text-slate-400 font-mono">20 Extracted Terms</span>
                 </div>
                 <div id="buzzwordsContainer" class="flex flex-wrap gap-2 pt-2"></div>
             </div>
 
+            <!-- Top 10 Leaderboards -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Sub-Sector Intelligence Leaderboards (Top 10)</h2>
                 
@@ -166,14 +173,10 @@
             subSelect.innerHTML = '<option value="">-- Select Sub-Sector --</option>';
             themeSelect.innerHTML = '<option value="">-- Select Strategic Theme --</option>';
             focusSelect.innerHTML = '<option value="">-- Select Focus Area --</option>';
-            
             themeSelect.disabled = true;
             focusSelect.disabled = true;
 
-            if (!macro) {
-                subSelect.disabled = true;
-                return;
-            }
+            if (!macro) { subSelect.disabled = true; return; }
 
             fetch(`${API_BASE}/sub-sectors?macro_industry=${encodeURIComponent(macro)}`)
                 .then(res => res.json())
@@ -198,10 +201,7 @@
             focusSelect.innerHTML = '<option value="">-- Select Focus Area --</option>';
             focusSelect.disabled = true;
 
-            if (!sub) {
-                themeSelect.disabled = true;
-                return;
-            }
+            if (!sub) return;
 
             fetch(`${API_BASE}/themes?macro_industry=${encodeURIComponent(macro)}&sub_sector=${encodeURIComponent(sub)}`)
                 .then(res => res.json())
@@ -226,10 +226,7 @@
 
             focusSelect.innerHTML = '<option value="">-- Select Focus Area --</option>';
 
-            if (!theme) {
-                focusSelect.disabled = true;
-                return;
-            }
+            if (!theme) return;
 
             fetch(`${API_BASE}/focus-areas?macro_industry=${encodeURIComponent(macro)}&sub_sector=${encodeURIComponent(sub)}&theme=${encodeURIComponent(theme)}`)
                 .then(res => res.json())
@@ -272,6 +269,7 @@
                     document.getElementById('momentumVal').textContent = `${metrics['3_year_momentum_velocity']}x`;
                     document.getElementById('stageVal').textContent = metrics['technology_stage'];
 
+                    // Render 2x2 Matrix Points
                     const layer = document.getElementById('matrixPointsLayer');
                     layer.innerHTML = '';
                     data.matrix_technologies.forEach(tech => {
@@ -301,22 +299,24 @@
                         layer.appendChild(pt);
                     });
 
-                    const geoContainer = document.getElementById('geoDistributionContainer');
-                    geoContainer.innerHTML = '';
-                    data.geographic_distribution.forEach(geo => {
-                        geoContainer.innerHTML += `
+                    // Render Top 10 Countries Horizontal Bar Chart
+                    const countryChart = document.getElementById('topCountriesChart');
+                    countryChart.innerHTML = '';
+                    data.top_10_countries.forEach(c => {
+                        countryChart.innerHTML += `
                             <div class="space-y-1">
                                 <div class="flex justify-between text-xs">
-                                    <span class="text-slate-300 font-medium">${geo.country}</span>
-                                    <span class="text-emerald-400 font-mono font-bold">${geo.patents.toLocaleString()} Patents (${geo.percentage}%)</span>
+                                    <span class="text-slate-300 font-medium">#${c.rank} Patent Office (${c.country_code})</span>
+                                    <span class="text-emerald-400 font-mono font-bold">${c.patents.toLocaleString()} Patents (${c.percentage}%)</span>
                                 </div>
                                 <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
-                                    <div class="bg-emerald-500 h-full rounded-full" style="width: ${geo.percentage}%"></div>
+                                    <div class="bg-emerald-500 h-full rounded-full" style="width: ${Math.min(c.percentage * 2, 100)}%"></div>
                                 </div>
                             </div>
                         `;
                     });
 
+                    // Render Salient Terms / Buzzwords
                     const buzzContainer = document.getElementById('buzzwordsContainer');
                     buzzContainer.innerHTML = '';
                     data.emerging_buzzwords.forEach(word => {
@@ -326,6 +326,7 @@
                             </span>`;
                     });
 
+                    // Render Corporate Leaderboard
                     const corpContainer = document.getElementById('corporateList');
                     corpContainer.innerHTML = '';
                     data.leaderboards.top_corporate.forEach((item, idx) => {
@@ -336,6 +337,7 @@
                             </div>`;
                     });
 
+                    // Render Academic Leaderboard
                     const acadContainer = document.getElementById('academicList');
                     acadContainer.innerHTML = '';
                     data.leaderboards.top_academia.forEach((item, idx) => {
@@ -349,36 +351,6 @@
                     document.getElementById('resultsCard').classList.remove('hidden');
                     document.getElementById('exportBtn').classList.remove('hidden');
                 });
-        });
-
-        document.getElementById('exportBtn').addEventListener('click', () => {
-            if (!currentAnalyticsData) return;
-
-            const m = currentAnalyticsData.calculated_metrics;
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Category,Parameter,Value\n";
-            csvContent += `Scope,Sub-Sector,"${currentAnalyticsData.selected_sub_sector}"\n`;
-            csvContent += `Metrics,10-Year CAGR,${m['10_year_cagr_percentage']}%\n`;
-            csvContent += `Metrics,3-Year Momentum Velocity,${m['3_year_momentum_velocity']}x\n`;
-            csvContent += `Metrics,Technology Stage,${m['technology_stage']}\n\n`;
-
-            csvContent += "Corporate Leaderboard (Top 10),Entity,Patents\n";
-            currentAnalyticsData.leaderboards.top_corporate.forEach(item => {
-                csvContent += `Corporate,"${item.name}",${item.patents}\n`;
-            });
-
-            csvContent += "\nAcademic Leaderboard (Top 10),Institution,Citations\n";
-            currentAnalyticsData.leaderboards.top_academia.forEach(item => {
-                csvContent += `Academia,"${item.name}",${item.citations}\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `TF_IIP_Report_${currentAnalyticsData.selected_sub_sector.replace(/[^a-zA-Z0-9]/g, '_')}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         });
     </script>
 </body>

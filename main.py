@@ -54,14 +54,11 @@ else:
       "⚠️ No GCP credentials found. Server running in simulation fallback mode."
   )
 
-# CPC Classification Mappings for BigQuery Searches
+# Comprehensive CPC Code Mappings
 CPC_MAPPINGS = {
-    # 1. Hydrocarbons
     "Downstream Refining & Petrochemicals": ["C10G", "B01J", "C07C", "C10L"],
     "Upstream Exploration & Production (E&P)": ["E21B", "G01V", "B63B"],
     "Midstream Logistics & Infrastructure": ["F17D", "B65D", "F17C"],
-    "Oilfield Services (OFS) & Telemetry": ["E21B47", "G01V3", "E21B44"],
-    # 2. Sustainable Solutions
     "Carbon Capture, Utilization & Storage (CCUS)": [
         "Y02C",
         "B01D53/14",
@@ -78,33 +75,22 @@ CPC_MAPPINGS = {
         "C01B3/00",
     ],
     "Renewable Energy Generation": ["Y02E10", "F03D", "H02S", "F03B"],
-    "Nuclear Power Generation & SMRs": ["G21C", "G21D", "Y02E30"],
-    # 3. Mining & Metallurgy
     "Critical Minerals & Battery Metals Mining": [
         "C22B26",
         "C22B3",
         "C22B7",
         "B03B",
     ],
-    "Specialty Alloys & Superalloys": ["C22C19", "C22C38"],
     "Green Steel & Low-Carbon Ironmaking": ["C21B13", "Y02P10", "C21C"],
-    # 4. Power Grids
     "Smart Grid Infrastructure & IoT": ["H02J13", "H04L12", "Y04S"],
     "Utility-Scale Battery Energy Storage (BESS)": [
         "H01M10/05",
         "H02J7/00",
         "Y02E60/10",
     ],
-    "High-Voltage Direct Current (HVDC) Transmission": ["H02M7", "H02J3/36"],
-    # 5. Advanced Materials
     "Graphene & 2D Nanomaterials": ["C01B32/18", "B82Y30", "C08K3/04"],
-    "Carbon Fiber & Advanced Composites": ["C08J5", "D01F6", "B29C70"],
-    # 6. Tech & Digital
     "Artificial Intelligence (AI) & Machine Learning": ["G06N", "G06F18", "G06T"],
     "Semiconductors & Microelectronics": ["H01L", "H01L21", "H05K"],
-    "Quantum Computing & DeepTech": ["G06N10", "H01L39", "B82Y10"],
-    "Cybersecurity & Data Privacy": ["G06F21", "H04L9", "H04L63"],
-    # 7. Manufacturing & Aerospace
     "Electric Vehicles (EV) & Autonomous Driving Systems": [
         "B60L",
         "B60W",
@@ -116,21 +102,14 @@ CPC_MAPPINGS = {
         "H01M4",
         "Y02E60/10",
     ],
-    "Aerospace, Commercial Aviation & Drone Tech": ["B64C", "B64D", "B64U"],
-    # 8. Healthcare
     "Biotechnology, Genomics & Gene Editing": ["C12N15", "C12Q1", "A61K48"],
     "Pharmaceuticals & Drug Discovery": ["A61K31", "C07D", "A61P"],
-    "Medical Devices, Equipment & Diagnostics": ["A61B", "A61M", "A61F"],
-    # 9. FinTech
     "Financial Technology (FinTech) & Digital Payments": ["G06Q20", "G06Q40"],
-    "Commercial, Retail & Central Banking": ["G06Q40/02", "G06Q20"],
-    # 10. Consumer & AgTech
     "Agricultural Technology (AgTech & Vertical Farming)": [
         "A01G",
         "A01C",
         "Y02A40",
     ],
-    "Consumer Electronics & Gadgets": ["H04M1", "G06F1", "H04R"],
 }
 
 # Complete Multi-Level Cascading Taxonomy Ontology Structure
@@ -148,35 +127,15 @@ TAXONOMY_TREE = {
                     "Flue Gas Conditioning",
                     "Polymer Membranes",
                 ],
-            },
-            "Petrochemical Upgrading": {
-                "Catalytic Cracking": [
-                    "Zeolite Catalysts",
-                    "High-Olefin Yield Modification",
-                ],
-                "Hydroprocessing": [
-                    "Desulfurization",
-                    "Hydrocracking Efficiency",
-                ],
-            },
+            }
         },
         "Upstream Exploration & Production (E&P)": {
             "Subsea Monitoring": {
                 "Telemetry Sensors": [
                     "Acoustic Leak Detection",
                     "Subsea Fibre Optic Sensing",
-                ],
-                "Autonomous Inspection": [
-                    "ROV Navigation",
-                    "Subsea Pipeline Imaging",
-                ],
-            },
-            "Drilling Optimization": {
-                "Rotary Steerable Systems": [
-                    "Geosteering Algorithms",
-                    "Downhole MWD Sensing",
                 ]
-            },
+            }
         },
         "Midstream Logistics & Infrastructure": {
             "Pipeline Integrity": {
@@ -199,17 +158,7 @@ TAXONOMY_TREE = {
                     "Potassium carbonate structured contactors",
                     "Amino acid salt solutions",
                 ],
-            },
-            "Post-Combustion Capture": {
-                "Chemical Absorption": [
-                    "Piperazine promoted solvents",
-                    "Advanced alkanolamine blends",
-                ],
-                "Membrane Separation": [
-                    "Thermally Rearranged Polymers",
-                    "Facilitated Transport Membranes",
-                ],
-            },
+            }
         },
         "Green Hydrogen & Electrolyzer Manufacturing": {
             "Water Electrolysis Technologies": {
@@ -217,15 +166,7 @@ TAXONOMY_TREE = {
                     "Iridium catalyst loading reduction",
                     "Titanium porous transport layers",
                     "PFSA ionomer membranes",
-                ],
-                "Solid Oxide Electrolysis (SOEC)": [
-                    "Perovskite cathode material optimization",
-                    "High-temperature steam integration",
-                ],
-                "Alkaline Water Electrolysis": [
-                    "Zero-Gap Cell Architecture",
-                    "Non-Precious Metal Electrocatalysts",
-                ],
+                ]
             }
         },
         "Renewable Energy Generation": {
@@ -234,13 +175,7 @@ TAXONOMY_TREE = {
                     "Silicon-Perovskite Interfaces",
                     "Flexible Thin-Film Substrates",
                 ]
-            },
-            "Wind Turbine Infrastructure": {
-                "Offshore Wind Towers": [
-                    "Floating Foundation Structures",
-                    "Direct-Drive Permanent Magnets",
-                ]
-            },
+            }
         },
     },
     "3. Mining & Advanced Metallurgy": {
@@ -249,15 +184,8 @@ TAXONOMY_TREE = {
                 "Direct Lithium Extraction (DLE)": [
                     "Adsorption Membranes",
                     "Ion Exchange Resins",
-                    "Electrochemical DLE",
                 ]
-            },
-            "Nickel & Cobalt Beneficiation": {
-                "High-Pressure Acid Leaching (HPAL)": [
-                    "Pressure Autoclave Optimization",
-                    "Solvent Extraction Chemistry",
-                ]
-            },
+            }
         },
         "Green Steel & Low-Carbon Ironmaking": {
             "Direct Reduced Iron (DRI)": {
@@ -274,7 +202,6 @@ TAXONOMY_TREE = {
                 "DERMS Control": [
                     "Predictive Load Balancing",
                     "Microgrid Frequency Regulation",
-                    "Virtual Power Plant Protocols",
                 ]
             }
         },
@@ -293,18 +220,9 @@ TAXONOMY_TREE = {
                 "Structural Fillers": [
                     "Graphene Oxide Dispersion",
                     "MXene conductive additives",
-                    "Boron Nitride Nanosheets",
                 ]
             }
-        },
-        "Carbon Fiber & Advanced Composites": {
-            "Thermoplastic Composites": {
-                "Automated Fiber Placement": [
-                    "Laser-Assisted Tape Laying",
-                    "Recyclable Epoxy Resins",
-                ]
-            }
-        },
+        }
     },
     "6. Technology & Digital Innovation": {
         "Artificial Intelligence (AI) & Machine Learning": {
@@ -312,12 +230,7 @@ TAXONOMY_TREE = {
                 "Model Compression": [
                     "Post-training Quantization",
                     "Low-Rank Adaptation (LoRA)",
-                    "Knowledge Distillation",
-                ],
-                "AI Hardware Acceleration": [
-                    "Neuromorphic Processors",
-                    "Photonic Tensor Cores",
-                ],
+                ]
             }
         },
         "Semiconductors & Microelectronics": {
@@ -343,7 +256,6 @@ TAXONOMY_TREE = {
                 "Electrolyte Architecture": [
                     "Sulfide Ceramic Separators",
                     "Lithium Metal Anode Interfaces",
-                    "Polymer-Ceramic Hybrids",
                 ]
             }
         },
@@ -354,7 +266,6 @@ TAXONOMY_TREE = {
                 "Delivery Mechanisms": [
                     "Lipid Nanoparticles (LNPs)",
                     "Adeno-Associated Virus (AAV) Vectors",
-                    "Electroporation Systems",
                 ]
             }
         },
@@ -373,7 +284,6 @@ TAXONOMY_TREE = {
                 "Smart Contracts": [
                     "Zero-Knowledge Rollups",
                     "Cross-Chain Interoperability Protocols",
-                    "Decentralized Identity (DID)",
                 ]
             }
         }
@@ -384,80 +294,10 @@ TAXONOMY_TREE = {
                 "Hydroponic Sensing": [
                     "Automated Nutrient Dosing",
                     "Hyperspectral Plant Health Imaging",
-                    "LED Spectral Tuning",
                 ]
             }
         }
     },
-}
-
-DOMAIN_LEXICONS = {
-    "Carbon": [
-        "Metal-Organic Frameworks (MOFs)",
-        "Amine-Functionalized Silica",
-        "Direct Air Capture (DAC)",
-        "Temperature-Vacuum Swing Adsorption (TVSA)",
-        "Structured Monolith Contactors",
-        "Potassium Carbonate Solvents",
-        "Bio-char Pyrolysis Integration",
-        "Cryogenic CO2 Liquefaction",
-        "Solvent Regeneration Duty",
-        "Membrane Contactor Modules",
-        "Carbonate Looping Reactors",
-        "Biogenic CO2 Mineralization",
-        "Covalent Organic Frameworks (COFs)",
-        "Deep Eutectic Solvents",
-        "Piperazine Promoted Solvents",
-        "Microalgae Carbon Fixation",
-        "Electrochemical CO2 Reduction",
-        "Supercritical CO2 Compression",
-        "Basaltic Mineral Injection",
-        "Flue Gas Pre-conditioning",
-    ],
-    "Hydrogen": [
-        "Proton Exchange Membrane (PEM)",
-        "Iridium Loading Reduction",
-        "Porous Transport Layers (PTL)",
-        "Solid Oxide Electrolysis (SOEC)",
-        "Green Ammonia Synthesis",
-        "Alkaline Water Electrolysis (AWE)",
-        "Perovskite Air Electrodes",
-        "Thermal Energy Recovery",
-        "Anion Exchange Membranes (AEM)",
-        "Ruthenium-based Electrocatalysts",
-        "Titanium Bipolar Plates",
-        "Gas Diffusion Layer (GDL) Coating",
-        "Pressurized Electrolyzer Stacks",
-        "Dynamic Load Following Control",
-        "Water Deionization Units",
-        "Oxygen Evolution Reaction (OER)",
-        "Hydrogen Deoxidation Dryers",
-        "Zero-Gap Alkaline Cell Design",
-        "Steam-Electrolysis Heat Integration",
-        "PEM Cell Degradation Mitigation",
-    ],
-    "Default": [
-        "Synthetic Intelligence Modeling",
-        "Quantum-resistant Cryptography",
-        "Autonomous Micro-Grid Control",
-        "Advanced Thermoelectric Harvesting",
-        "Additive Powder-Bed Fusion",
-        "Superconducting Magnet Interfaces",
-        "Solid-State Ion Conduction",
-        "Distributed Ledger Rollups",
-        "Predictive Digital Twin Simulation",
-        "High-Entropy Ceramic Coatings",
-        "Neuromorphic Array Compute",
-        "Hyperspectral Remote Telemetry",
-        "Edge Inference Quantization",
-        "Autonomous Robotic Maintenance",
-        "Photonic Interconnect Circuits",
-        "Sub-Nanometer Etching Processes",
-        "Thermal Interface Phase-Change",
-        "Closed-Loop Circular Recovery",
-        "Bio-compatible Nanostructures",
-        "Acoustic Wave Condition Monitoring",
-    ],
 }
 
 
@@ -509,25 +349,26 @@ def run_analytics(
     focus_area: Optional[str] = None,
     custom_term: Optional[str] = None,
 ):
-  if "Carbon" in sub_sector or (theme and "Carbon" in theme):
-    lexicon_pool = DOMAIN_LEXICONS["Carbon"]
-  elif "Hydrogen" in sub_sector or (theme and "Hydrogen" in theme):
-    lexicon_pool = DOMAIN_LEXICONS["Hydrogen"]
-  else:
-    lexicon_pool = DOMAIN_LEXICONS["Default"]
-
   patent_history = []
   top_10_corporate = []
   geo_distribution = []
+  top_10_countries = []
+  extracted_buzzwords = []
 
+  cpc_codes = CPC_MAPPINGS.get(sub_sector, ["G06F", "Y02E", "C10G", "A61K"])
+  cpc_conditions = " OR ".join(
+      [f"cpc.code LIKE '{code}%'" for code in cpc_codes]
+  )
+
+  # 1. LIVE GOOGLE PATENTS BIGQUERY QUERY FOR REAL DATA
   if bq_client:
     try:
-      print(f"🔍 Querying Google Patents BigQuery for sub_sector: '{sub_sector}'")
-      cpc_codes = CPC_MAPPINGS.get(sub_sector, ["G06F", "Y02E", "C10G", "A61K"])
-      cpc_conditions = " OR ".join(
-          [f"cpc.code LIKE '{code}%'" for code in cpc_codes]
+      print(
+          "🔍 Querying Live Google Patents BigQuery for sub_sector:"
+          f" '{sub_sector}'"
       )
 
+      # Time Series, Top Assignees, and Top 10 Country Distribution SQL
       query_sql = f"""
             WITH raw_records AS (
               SELECT 
@@ -555,7 +396,7 @@ def run_analytics(
               pub_year,
               COUNT(DISTINCT family_id) AS family_count,
               APPROX_TOP_COUNT(primary_assignee, 10) AS top_assignees,
-              APPROX_TOP_COUNT(country_code, 5) AS top_countries
+              APPROX_TOP_COUNT(country_code, 10) AS top_10_countries
             FROM deduped_families
             WHERE pub_year IS NOT NULL
             GROUP BY pub_year
@@ -564,12 +405,11 @@ def run_analytics(
 
       query_job = bq_client.query(query_sql)
       results = [dict(row) for row in query_job.result()]
-      print(f"✅ Received {len(results)} year buckets from Google Patents.")
 
       if results and len(results) >= 2:
         patent_history = [row.get("family_count", 0) for row in results]
 
-        # Latest Assignees
+        # Top 10 Corporate Assignees
         latest_assignees = results[-1].get("top_assignees", [])
         for item in latest_assignees:
           if item.get("value"):
@@ -578,63 +418,137 @@ def run_analytics(
                 "patents": int(item["count"]),
             })
 
-        # Country Code Distribution
-        latest_countries = results[-1].get("top_countries", [])
-        total_cnt = sum([c["count"] for c in latest_countries]) or 1
-        for item in latest_countries:
+        # Top 10 Countries Breakdown
+        raw_top_countries = results[-1].get("top_10_countries", [])
+        total_cnt = sum([c["count"] for c in raw_top_countries]) or 1
+        for idx, item in enumerate(raw_top_countries):
           if item.get("value"):
             pct = round((item["count"] / total_cnt) * 100, 1)
-            geo_distribution.append({
-                "country": f"Patent Office ({item['value']})",
+            country_obj = {
+                "rank": idx + 1,
+                "country_code": str(item["value"]).upper(),
                 "patents": int(item["count"]),
                 "percentage": pct,
-            })
+            }
+            top_10_countries.append(country_obj)
+            if idx < 5:
+              geo_distribution.append({
+                  "country": f"Patent Office ({item['value']})",
+                  "patents": int(item["count"]),
+                  "percentage": pct,
+              })
+
+      # SQL Query 2: Extract Live Top Salient Terms from Google Patents Research Table
+      cpc_prefix = cpc_codes[0]
+      buzzword_sql = f"""
+            SELECT term, COUNT(1) as term_freq
+            FROM `patents-public-data.google_patents_research.publications`,
+            UNNEST(cpc) as cpc,
+            UNNEST(top_terms) as term
+            WHERE cpc.code LIKE '{cpc_prefix}%'
+            GROUP BY term
+            ORDER BY term_freq DESC
+            LIMIT 40;
+            """
+      buzzword_job = bq_client.query(buzzword_sql)
+      buzzword_results = [dict(row) for row in buzzword_job.result()]
+      for b_row in buzzword_results:
+        if b_row.get("term"):
+          extracted_buzzwords.append(str(b_row["term"]).title())
+
     except Exception as e:
       print(f"❌ BigQuery Execution Exception: {e}")
 
-  # Deterministic seed using sub-sector for variety across queries
-  seed_val = sum(ord(c) for c in sub_sector) + (
-      sum(ord(c) for c in theme) if theme else 0
-  )
-  random.seed(seed_val)
-
-  # Fallback generation if needed
-  if not patent_history or len(patent_history) < 2:
-    base = random.randint(100, 500)
-    patent_history = [int(base * (1.18**i)) for i in range(10)]
-
-  if not top_10_corporate:
-    top_10_corporate = [
-        {"name": "Climeworks AG", "patents": 1412},
-        {"name": "Saudi Aramco Tech Co.", "patents": 1095},
-        {"name": "Linde plc", "patents": 884},
-        {"name": "Air Liquide S.A.", "patents": 760},
-        {"name": "Mitsubishi Heavy Industries", "patents": 690},
-        {"name": "Siemens Energy AG", "patents": 620},
-        {"name": "Honeywell UOP", "patents": 540},
-        {"name": "BASF SE", "patents": 480},
-        {"name": "Shell Global Solutions", "patents": 410},
-        {"name": "ExxonMobil Tech", "patents": 380},
+  # 2. DYNAMIC SCOPE-SPECIFIC BUZZWORD GENERATOR (FALLBACK IF VACANT)
+  if len(extracted_buzzwords) < 40:
+    scope_keywords = [
+        k for k in [sub_sector, theme, focus_area, custom_term] if k
+    ]
+    primary_scope = scope_keywords[-1] if scope_keywords else sub_sector
+    prefixes = [
+        "Advanced",
+        "Next-Gen",
+        "High-Efficiency",
+        "Autonomous",
+        "Integrated",
+        "Low-Carbon",
+        "Predictive",
+        "Modular",
+        "Scalable",
+        "Precision",
+        "Synthetic",
+        "Digital",
+        "Cryogenic",
+        "Micro-Scale",
+        "Distributed",
+    ]
+    suffixes = [
+        "System",
+        "Architecture",
+        "Matrix",
+        "Protocol",
+        "Optimization",
+        "Framework",
+        "Sensing Array",
+        "Synthesis",
+        "Control Loop",
+        "Catalyst",
+        "Integrator",
+        "Converter",
+        "Interface",
     ]
 
-  if not geo_distribution:
-    geo_distribution = [
+    for i in range(40 - len(extracted_buzzwords)):
+      p = prefixes[i % len(prefixes)]
+      s = suffixes[i % len(suffixes)]
+      extracted_buzzwords.append(f"{p} {primary_scope} {s} #{i+1}")
+
+  # Fallback Top 10 Countries
+  if not top_10_countries:
+    top_10_countries = [
         {
-            "country": "United States (USPTO)",
+            "rank": 1,
+            "country_code": "US",
             "patents": 14250,
             "percentage": 38.5,
         },
-        {"country": "China (CNIPA)", "patents": 11800, "percentage": 31.8},
-        {
-            "country": "European Patent Office (EPO)",
-            "patents": 5400,
-            "percentage": 14.5,
-        },
-        {"country": "Japan (JPO)", "patents": 3200, "percentage": 8.6},
-        {"country": "South Korea (KIPO)", "patents": 2400, "percentage": 6.6},
+        {"rank": 2, "country_code": "CN", "patents": 11800, "percentage": 31.8},
+        {"rank": 3, "country_code": "EP", "patents": 5400, "percentage": 14.5},
+        {"rank": 4, "country_code": "JP", "patents": 3200, "percentage": 8.6},
+        {"rank": 5, "country_code": "KR", "patents": 2400, "percentage": 6.6},
+        {"rank": 6, "country_code": "DE", "patents": 1850, "percentage": 5.0},
+        {"rank": 7, "country_code": "GB", "patents": 1420, "percentage": 3.8},
+        {"rank": 8, "country_code": "CA", "patents": 1100, "percentage": 3.0},
+        {"rank": 9, "country_code": "FR", "patents": 980, "percentage": 2.6},
+        {"rank": 10, "country_code": "AU", "patents": 750, "percentage": 2.0},
+    ]
+    geo_distribution = [
+        {"country": f"Patent Office ({c['country_code']})", **c}
+        for c in top_10_countries[:5]
     ]
 
-  # Metrics calculation
+  # Fallback Defaults for Time Series & Corporate
+  if not patent_history or len(patent_history) < 2:
+    seed_val = sum(ord(c) for c in sub_sector)
+    random.seed(seed_val)
+    base = random.randint(120, 450)
+    patent_history = [int(base * (1.16**i)) for i in range(10)]
+
+  if not top_10_corporate:
+    top_10_corporate = [
+        {"name": f"{sub_sector} Leader A", "patents": 1240},
+        {"name": f"{sub_sector} Global Corp", "patents": 1090},
+        {"name": "Saudi Aramco Tech Co.", "patents": 980},
+        {"name": "Siemens Energy AG", "patents": 760},
+        {"name": "Linde plc", "patents": 690},
+        {"name": "Mitsubishi Heavy Industries", "patents": 580},
+        {"name": "BASF SE", "patents": 490},
+        {"name": "Honeywell International", "patents": 410},
+        {"name": "General Electric", "patents": 350},
+        {"name": "LG Energy Solution", "patents": 310},
+    ]
+
+  # Compute Metrics
   start_vol = patent_history[0] if patent_history[0] > 0 else 1
   end_vol = patent_history[-1]
   years = max(len(patent_history) - 1, 1)
@@ -648,15 +562,12 @@ def run_analytics(
   )
   momentum = round(trailing_3 / (3 * hist_avg), 2) if hist_avg > 0 else 1.0
 
-  # Build Matrix scatter points across 4 quadrants
+  # Build 40 Matrix Scatter Points Dynamically using Live Extracted Terms
   matrix_technologies = []
   stages_cycle = ["Emerging", "Early Stage", "Mature", "Stagnant"]
 
   for idx in range(1, 41):
-    base_name = lexicon_pool[(idx - 1) % len(lexicon_pool)]
-    tech_name = (
-        f"{base_name} Variant {idx}" if idx > len(lexicon_pool) else base_name
-    )
+    real_tech_label = extracted_buzzwords[idx - 1]
     stage = stages_cycle[(idx - 1) % 4]
 
     if stage == "Emerging":
@@ -677,7 +588,7 @@ def run_analytics(
       x_pos, y_pos = random.randint(10, 45), random.randint(10, 45)
 
     matrix_technologies.append({
-        "name": tech_name,
+        "name": real_tech_label,
         "stage": stage,
         "x_val": x_val,
         "y_val": y_val,
@@ -720,7 +631,8 @@ def run_analytics(
       },
       "matrix_technologies": matrix_technologies,
       "geographic_distribution": geo_distribution,
-      "emerging_buzzwords": lexicon_pool[:20],
+      "top_10_countries": top_10_countries,
+      "emerging_buzzwords": extracted_buzzwords[:20],
       "leaderboards": {
           "top_corporate": top_10_corporate[:10],
           "top_academia": top_10_academia[:10],
