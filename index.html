@@ -20,12 +20,11 @@
             </button>
         </div>
 
-        <!-- Target Scope Controls (Levels 1 – 5) -->
+        <!-- Target Scope (Levels 1 - 5) -->
         <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
             <h2 class="text-sm uppercase tracking-wider text-slate-400 font-semibold">Select Target Scope (Levels 1 – 5)</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Level 1 -->
                 <div>
                     <label class="block text-xs text-slate-300 mb-1">Level 1: Macro Industry</label>
                     <select id="macroSelect" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500">
@@ -33,7 +32,6 @@
                     </select>
                 </div>
 
-                <!-- Level 2 -->
                 <div>
                     <label class="block text-xs text-slate-300 mb-1">Level 2: Sub-Sector</label>
                     <select id="subSelect" disabled class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500 disabled:opacity-50">
@@ -41,7 +39,6 @@
                     </select>
                 </div>
 
-                <!-- Level 3 -->
                 <div>
                     <label class="block text-xs text-slate-300 mb-1">Level 3: Strategic Theme (Optional)</label>
                     <select id="themeSelect" disabled class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500 disabled:opacity-50">
@@ -49,7 +46,6 @@
                     </select>
                 </div>
 
-                <!-- Level 4 -->
                 <div>
                     <label class="block text-xs text-slate-300 mb-1">Level 4: Focus Area (Optional)</label>
                     <select id="focusSelect" disabled class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500 disabled:opacity-50">
@@ -58,7 +54,6 @@
                 </div>
             </div>
 
-            <!-- Level 5 Custom Injected Term -->
             <div>
                 <label class="block text-xs text-slate-300 mb-1">Level 5: Custom Term / Keyword Injection (Optional)</label>
                 <input type="text" id="customTerm" placeholder="e.g. Solid Amine Contactor, Metal-Organic Framework" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-white focus:outline-none focus:border-emerald-500">
@@ -69,10 +64,9 @@
             </button>
         </div>
 
-        <!-- Output Analytics Results -->
+        <!-- Analytics Output Dashboard -->
         <div id="resultsCard" class="hidden space-y-6">
             
-            <!-- Overall Metrics Summary -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Calculated Technology Metrics</h2>
                 
@@ -92,7 +86,6 @@
                 </div>
             </div>
 
-            <!-- 2x2 Technology Maturity Matrix -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <div class="flex justify-between items-center">
                     <div>
@@ -115,13 +108,11 @@
                 </div>
             </div>
 
-            <!-- Geographic Patent Distribution -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Geographic Distribution of Patent Filings</h2>
                 <div id="geoDistributionContainer" class="space-y-3"></div>
             </div>
 
-            <!-- Domain-Specific NLP Lexicon & Buzzwords (20 Terms) -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <div class="flex justify-between items-center">
                     <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Domain NLP Lexicon & Emerging Tech Buzzwords</h2>
@@ -130,7 +121,6 @@
                 <div id="buzzwordsContainer" class="flex flex-wrap gap-2 pt-2"></div>
             </div>
 
-            <!-- Top 10 Leaderboards Grid -->
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 space-y-4 shadow-lg">
                 <h2 class="text-sm uppercase tracking-wider text-emerald-400 font-semibold">Sub-Sector Intelligence Leaderboards (Top 10)</h2>
                 
@@ -152,10 +142,9 @@
     </div>
 
     <script>
-        const API_BASE = "http://127.0.0.1:8000/api/v1";
+        const API_BASE = `${window.location.origin}/api/v1`;
         let currentAnalyticsData = null;
 
-        // Fetch Level 1 Options
         fetch(`${API_BASE}/macro-industries`)
             .then(res => res.json())
             .then(data => {
@@ -168,7 +157,6 @@
                 });
             });
 
-        // Level 1 -> Level 2
         document.getElementById('macroSelect').addEventListener('change', (e) => {
             const macro = e.target.value;
             const subSelect = document.getElementById('subSelect');
@@ -200,7 +188,6 @@
                 });
         });
 
-        // Level 2 -> Level 3
         document.getElementById('subSelect').addEventListener('change', (e) => {
             const macro = document.getElementById('macroSelect').value;
             const sub = e.target.value;
@@ -219,17 +206,18 @@
             fetch(`${API_BASE}/themes?macro_industry=${encodeURIComponent(macro)}&sub_sector=${encodeURIComponent(sub)}`)
                 .then(res => res.json())
                 .then(data => {
-                    data.themes.forEach(item => {
-                        const opt = document.createElement('option');
-                        opt.value = item;
-                        opt.textContent = item;
-                        themeSelect.appendChild(opt);
-                    });
-                    themeSelect.disabled = false;
+                    if (data.themes && data.themes.length > 0) {
+                        data.themes.forEach(item => {
+                            const opt = document.createElement('option');
+                            opt.value = item;
+                            opt.textContent = item;
+                            themeSelect.appendChild(opt);
+                        });
+                        themeSelect.disabled = false;
+                    }
                 });
         });
 
-        // Level 3 -> Level 4
         document.getElementById('themeSelect').addEventListener('change', (e) => {
             const macro = document.getElementById('macroSelect').value;
             const sub = document.getElementById('subSelect').value;
@@ -246,17 +234,18 @@
             fetch(`${API_BASE}/focus-areas?macro_industry=${encodeURIComponent(macro)}&sub_sector=${encodeURIComponent(sub)}&theme=${encodeURIComponent(theme)}`)
                 .then(res => res.json())
                 .then(data => {
-                    data.focus_areas.forEach(item => {
-                        const opt = document.createElement('option');
-                        opt.value = item;
-                        opt.textContent = item;
-                        focusSelect.appendChild(opt);
-                    });
-                    focusSelect.disabled = false;
+                    if (data.focus_areas && data.focus_areas.length > 0) {
+                        data.focus_areas.forEach(item => {
+                            const opt = document.createElement('option');
+                            opt.value = item;
+                            opt.textContent = item;
+                            focusSelect.appendChild(opt);
+                        });
+                        focusSelect.disabled = false;
+                    }
                 });
         });
 
-        // Run Foresight Analytics
         document.getElementById('runBtn').addEventListener('click', () => {
             const subSector = document.getElementById('subSelect').value;
             const theme = document.getElementById('themeSelect').value;
@@ -283,7 +272,6 @@
                     document.getElementById('momentumVal').textContent = `${metrics['3_year_momentum_velocity']}x`;
                     document.getElementById('stageVal').textContent = metrics['technology_stage'];
 
-                    // Render 2x2 Matrix Scatter Points
                     const layer = document.getElementById('matrixPointsLayer');
                     layer.innerHTML = '';
                     data.matrix_technologies.forEach(tech => {
@@ -313,7 +301,6 @@
                         layer.appendChild(pt);
                     });
 
-                    // Render Geographic Distribution Progress Bars
                     const geoContainer = document.getElementById('geoDistributionContainer');
                     geoContainer.innerHTML = '';
                     data.geographic_distribution.forEach(geo => {
@@ -330,7 +317,6 @@
                         `;
                     });
 
-                    // Render 20 Emerging Buzzwords
                     const buzzContainer = document.getElementById('buzzwordsContainer');
                     buzzContainer.innerHTML = '';
                     data.emerging_buzzwords.forEach(word => {
@@ -340,7 +326,6 @@
                             </span>`;
                     });
 
-                    // Render Top 10 Corporate Leaderboard
                     const corpContainer = document.getElementById('corporateList');
                     corpContainer.innerHTML = '';
                     data.leaderboards.top_corporate.forEach((item, idx) => {
@@ -351,7 +336,6 @@
                             </div>`;
                     });
 
-                    // Render Top 10 Academic Leaderboard
                     const acadContainer = document.getElementById('academicList');
                     acadContainer.innerHTML = '';
                     data.leaderboards.top_academia.forEach((item, idx) => {
@@ -367,7 +351,6 @@
                 });
         });
 
-        // Export CSV Function
         document.getElementById('exportBtn').addEventListener('click', () => {
             if (!currentAnalyticsData) return;
 
